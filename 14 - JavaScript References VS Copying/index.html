@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+</head>
+<body>
+
+  <script>
+    // start with strings, numbers and booleans
+    let age = 100;
+    let age2 = age;
+
+    console.log(age, age2); // outputs 100 100
+
+    age = 200;
+    console.log(age, age2); // outputs 200 100
+
+    let name = 'Mass';
+    let name2 = name;
+
+    console.log(name, name2); // outputs Mass Mass
+    name = 'Prince';
+    console.log(name, name2); // outputs Prince Mass
+
+    /* here we saw that changing one variable doesn't update the other one*/
+
+
+    // Let's say we have an array
+    const players = ['Mass', 'Sarah', 'Ryan', 'Poppy'];
+
+    // and we want to make a copy of it.
+    const team = players;
+
+    console.log(players, team);
+
+    // You might think we can just do something like this:
+    // team[3] = 'Lux';
+
+
+    // however what happens when we update that array?
+    team[3] = 'Lux';
+   
+    // now here is the problem!
+    console.log(players, team) // outputs ["Mass", "Sarah", "Ryan", "Lux"]
+
+    // oh no - we have edited the original array too!
+
+    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+    // team is a reference to players so updating one element will change the original array (players)
+
+    // So, how do we fix this? We take a copy instead!
+
+    const team2 = players.slice(); // slice method without arguments will return a copy of the original array
+
+    // one day
+
+    // or create a new array and concat the old one in
+    const team3 = [].concat(players); // concatening an empty array with the original array will also return a copy of it
+
+    // or use the new ES6 Spread
+    const team4 = [...players] // spread will take every item out of the iterable and puts in in the containing 
+
+
+    // now when we update it, the original one isn't changed
+    team4[3] = 'Luke';
+    console.log(team4);
+
+    // We can also do 
+    const team5 = Array.from(players);
+
+    // The same thing goes for objects, let's say we have a person object
+
+    // with Objects
+    const person = {
+    	name: "Mass Sow",
+    	age = 35
+    };
+
+    // and think we make a copy:
+    const prince = person;
+    prince.number = 5; // updates the original object as prince is a reference
+
+    // how do we take a copy instead?
+    const better_prince = Object.assign({}, person, {number: 36}); /* using Object.assign method and passing in an empty object, the object we want to copy properties from and fold in the new properties you wish to overwrite */
+    console.log(better_prince);
+
+    // We will hopefully soon see the object ...spread
+    const captain = {...person};
+
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+
+    const mass = {
+    	name: 'Mass',
+    	age: 35,
+    	social: {
+    		twitter: '@mass_sow',
+    		facebook: 'MassJfk'
+    	}
+    }
+
+    //console.clear();
+    console.log(mass);
+
+    const dev = Object.assign({}, mass);
+    dev.name = 'da5atar'; // this will not update the object mass
+
+    //...but when we do this:
+
+    dev.social.twitter = '@nothertwitter'
+    console.log(dev.social);
+    console.log(mass.social); // the twitter field will be updated to @nothertwitter 
+
+  </script>
+
+</body>
+</html>
